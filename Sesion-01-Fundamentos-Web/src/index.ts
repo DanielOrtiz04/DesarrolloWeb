@@ -85,8 +85,12 @@ export function parseUrl(url: string): UrlParts {
  * Pista: un único `if / else if` con comparaciones de rangos basta.
  */
 export function classifyStatus(code: number): StatusCategory {
-  // TODO: tu implementación aquí
-  throw new Error("Not implemented");
+  if (code >= 100 && code < 200) return "1xx Informativo";
+  if (code >= 200 && code < 300) return "2xx Éxito";
+  if (code >= 300 && code < 400) return "3xx Redirección";
+  if (code >= 400 && code < 500) return "4xx Error del cliente";
+  if (code >= 500 && code < 600) return "5xx Error del servidor";
+  return "Desconocido";
 }
 
 /**
