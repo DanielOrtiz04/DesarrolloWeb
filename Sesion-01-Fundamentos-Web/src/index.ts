@@ -110,8 +110,22 @@ export function classifyStatus(code: number): StatusCategory {
  * nombre y valor. Recuerda `.trim()` para quitar espacios sobrantes.
  */
 export function parseHeaders(text: string): Headers {
-  // TODO: tu implementación aquí
-  throw new Error("Not implemented");
+  const headers: Headers = {};
+  const lines = text.split("\n");
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed === "") continue;
+
+    const sepIndex = trimmed.indexOf(":");
+    if (sepIndex === -1) continue;
+
+    const name = trimmed.slice(0, sepIndex).trim();
+    const value = trimmed.slice(sepIndex + 1).trim();
+    headers[name] = value;
+  }
+
+  return headers;
 }
 
 /**
@@ -133,8 +147,21 @@ export function summarizeRequest(
   status: number,
   headersText: string,
 ): string {
-  // TODO: tu implementación aquí
-  throw new Error("Not implemented");
+  const headers = parseHeaders(headersText);
+  const category = classifyStatus(status);
+
+  const headerLines = Object.entries(headers)
+    .map(([key, value]) => `  • ${key}: ${value}`)
+    .join("\n");
+
+  return [
+    "Resumen de la petición",
+    "──────────────────────",
+    `URL:     ${url}`,
+    `Status:  ${status} (${category})`,
+    "Headers:",
+    headerLines,
+  ].join("\n");
 }
 
 // ---------------------------------------------------------------------------
