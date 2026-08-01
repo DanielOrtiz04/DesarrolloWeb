@@ -36,23 +36,29 @@
       <p>Bienvenido a GameZone, un espacio donde comparto mis juegos favoritos, comparo plataformas y hablo de lo que más me gusta del mundo gamer.</p>
 
       <!-- TODO: usa <dialog> + un boton con command/commandfor (Invoker Commands API) -->
-      <dialog id="bienvenida">
-        <h3>Hola!</h3>
-        <p>Esto es un dialog modal nativo.</p>
-        <form method="dialog">
-          <button>Cerrar</button>
-        </form>
-      </dialog>
+     <dialog id="Bienvenido">
+  <h3>¡Bienvenido a GameZone!</h3>
+  <p>Aquí encontrarás mis juegos favoritos, una comparativa entre ellos y cómo contactarme. ¡Explora el sitio!</p>
+  <form method="dialog">
+    <button>Entendido</button>
+  </form>
+</dialog>
+<button command="show-modal" commandfor="bienvenida">
+  Ver mensaje de bienvenida
+</button>
+<button command="show-modal" commandfor="bienvenida">
+  Abrir dialog
+</button>
       <button command="show-modal" commandfor="bienvenida">
         Abrir dialog
       </button>
 
       <!-- TODO: usa popover para un menu o tooltip -->
-      <button popovertarget="menu-ayuda">?</button>
-      <div id="menu-ayuda" popover>
-        <h4>Ayuda</h4>
-        <p>Contenido del popover...</p>
-      </div>
+      <button popovertarget="menu-ayuda">? Ayuda</button>
+<div id="menu-ayuda" popover>
+  <h4>Cómo navegar GameZone</h4>
+  <p>Usa el menú de arriba para ver mis juegos favoritos, la comparativa entre ellos, o dejarme un mensaje en la página de contacto.</p>
+</div>
 
       <!-- TODO: formulario con al menos 3 inputs (text, email, etc.) -->
       <form action="#" method="POST">

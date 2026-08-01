@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GameZone — Comparativa</title>
+  <title>GameZone — Contacto</title>
 </head>
 <body>
   <header>
@@ -20,18 +20,25 @@
 
   <main>
     <section>
-      <h2>Contacto</h2>
-      <p>TODO: contenido aqui.</p>
-      <ul>
-        <li>Item 1</li>
-        <li>Item 2</li>
-        <li>Item 3</li>
-      </ul>
+      <h2>Contáctame</h2>
+<form action="#" method="POST">
+  <label for="nombre">Nombre:</label>
+  <input id="nombre" type="text" name="nombre" required minlength="3">
+
+  <label for="email">Email:</label>
+  <input id="email" type="email" name="email" required>
+
+  <label for="mensaje">Comentario sobre videojuegos:</label>
+  <textarea id="mensaje" name="mensaje" rows="4" placeholder="¿Qué juego debería probar?"></textarea>
+
+  <button type="submit">Enviar</button>
+</form>
+      
     </section>
   </main>
 
   <footer>
-    <p>&copy; 2026 Mi Sitio</p>
+    <p>&copy; 2026 GameZone </p>
   </footer>
 </body>
 </html>
