@@ -1,20 +1,78 @@
-/* TODO: Reset y estilos base */
+/* Reset y estilos base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-/* TODO: Galería de productos */
-/* Desktop (>=1024px): 3 columnas usando CSS Grid */
-/* Mobile (<768px): 1 columna con scroll vertical */
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: #1a1a1a;
+  background-color: #f5f5f5;
+  line-height: 1.5;
+}
 
-/* TODO: Estilo de cada tarjeta de producto */
-/* - Imagen ocupa el ancho completo de la tarjeta */
-/* - Nombre del producto en negrita */
-/* - Precio destacado */
-/* - Botón "Comprar" estilizado con hover effect */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
 
-/* TODO: To-Do List */
-/* - Lista sin marcadores (list-style: none) */
-/* - Checkbox con label accesible */
-/* - Tareas alternadas con color de fondo (zebra striping) */
+h1 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
 
-/* TODO: Diseño responsivo */
-/* - Usar @media queries para cambiar entre mobile y desktop */
-/* - La galería debe ser responsiva usando Grid + media queries */
+h2 {
+  font-size: 1.5rem;
+  margin: 2rem 0 1rem;
+}
+
+.producto {
+  background-color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+}
+
+.producto img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+.producto-info {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.producto-info h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.precio {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.btn-comprar {
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: auto;
+}
+
