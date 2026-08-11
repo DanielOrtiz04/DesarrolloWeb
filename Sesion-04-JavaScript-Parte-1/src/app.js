@@ -34,9 +34,17 @@ export function generarId() {
  *   La tarea creada, o null si el texto es vacío.
  */
 export function agregarTarea(texto) {
-    // TODO: validar que `texto` no esté vacío (trim), crear el objeto
-    // { id, texto, completada: false }, hacer push al array `tareas`
-    // y devolverlo. Si el texto es vacío, devolver null.
+    const textoLimpio = texto.trim();
+    if (textoLimpio === "") return null;
+
+    const nuevaTarea = {
+        id: generarId(),
+        texto: textoLimpio,
+        completada: false,
+    };
+
+    tareas.push(nuevaTarea);
+    return nuevaTarea;
 }
 
 /**
