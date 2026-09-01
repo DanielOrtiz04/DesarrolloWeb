@@ -4,7 +4,7 @@ import { existsSync, mkdtempSync, readFileSync } from 'node:fs';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { resolve, dirname, join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, '..');
@@ -15,14 +15,11 @@ let tmpDir;
 
 before(async () => {
     tmpDir = mkdtempSync(join(tmpdir(), 'dw-s6-'));
-    app = await import(resolve(root, 'src/app.js'));
+    app = await import(pathToFileURL(resolve(root, 'src/app.js')).href);
     // El barrel debe exportar lo mismo que app.js
-    index = await import(resolve(root, 'src/index.js'));
+    index = await import(pathToFileURL(resolve(root, 'src/index.js')).href);
 });
 
-// ===========================================================
-// Estructura del proyecto
-// ===========================================================
 describe('Estructura del proyecto', () => {
     it('src/app.js debe existir', () => {
         assert.ok(existsSync(resolve(root, 'src/app.js')), 'src/app.js no encontrado');
@@ -54,9 +51,6 @@ describe('Estructura del proyecto', () => {
     });
 });
 
-// ===========================================================
-// ES Modules: re-exports (barrel)
-// ===========================================================
 describe('ES Modules (barrel exports)', () => {
     it('src/index.js re-exporta sumar y restar de math.js', () => {
         assert.equal(typeof index.sumar, 'function');
@@ -81,9 +75,6 @@ describe('ES Modules (barrel exports)', () => {
     });
 });
 
-// ===========================================================
-// __dirname y rutaAbsoluta (import.meta.url)
-// ===========================================================
 describe('__dirname y rutas', () => {
     it('__dirname apunta a la carpeta src', () => {
         assert.match(app.__dirname, /src$/);
@@ -100,9 +91,6 @@ describe('__dirname y rutas', () => {
     });
 });
 
-// ===========================================================
-// parsearEnv
-// ===========================================================
 describe('parsearEnv', () => {
     it('parsea líneas CLAVE=VALOR', () => {
         const r = app.parsearEnv('PUERTO=8080\nNOMBRE=miapi\n');
@@ -121,9 +109,6 @@ describe('parsearEnv', () => {
     });
 });
 
-// ===========================================================
-// leerLineas (Readable)
-// ===========================================================
 describe('leerLineas', () => {
     it('lee líneas sin vacías', async () => {
         const f = join(tmpDir, 'lineas.txt');
@@ -137,9 +122,6 @@ describe('leerLineas', () => {
     });
 });
 
-// ===========================================================
-// filtrarLogs (Streams + pipeline)
-// ===========================================================
 describe('filtrarLogs', () => {
     let origen;
     let destino;
