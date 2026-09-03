@@ -1,18 +1,9 @@
-/**
- * Lista de Tareas — JS Parte 1
- * Universidad Mariano Gálvez de Guatemala · Desarrollo Web
- *
- * Implementa las funciones marcadas con TODO para que los tests pasen.
- * No cambies los nombres exportados ni su firma.
- */
-
 const STORAGE_KEY = "tareas-dw-s4";
 
-// Estado en memoria (lo que se persiste y se renderiza)
+
 let tareas = [];
 
 /**
- * Devuelve todas las tareas. Útil para los tests.
  * @returns {Array<{id: string, texto: string, completada: boolean}>}
  */
 export function obtenerTareas() {
@@ -20,7 +11,6 @@ export function obtenerTareas() {
 }
 
 /**
- * Crea un id único para cada tarea.
  * @returns {string}
  */
 export function generarId() {
@@ -28,10 +18,8 @@ export function generarId() {
 }
 
 /**
- * Agrega una tarea al modelo.
  * @param {string} texto
  * @returns {{id: string, texto: string, completada: boolean} | null}
- *   La tarea creada, o null si el texto es vacío.
  */
 export function agregarTarea(texto) {
     const textoLimpio = texto.trim();
@@ -48,7 +36,6 @@ export function agregarTarea(texto) {
 }
 
 /**
- * Elimina una tarea por id. Devuelve true si la encontró y eliminó.
  * @param {string} id
  * @returns {boolean}
  */
@@ -58,7 +45,6 @@ export function eliminarTarea(id) {
     return tareas.length < cantidadAntes;
 }
 /**
- * Marca/desmarca una tarea como completada. Devuelve true si la encontró.
  * @param {string} id
  * @returns {boolean}
  */
@@ -71,7 +57,6 @@ export function toggleTarea(id) {
 }
 
 /**
- * Devuelve un subconjunto de tareas según el filtro.
  * @param {"todas"|"pendientes"|"completadas"} filtro
  * @returns {Array}
  */
@@ -87,27 +72,16 @@ export function filtrarTareas(filtro) {
 
 
 export function guardar() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(tareas));
+    
 }
 
+
 export function cargar() {
-    const datosGuardados = localStorage.getItem(STORAGE_KEY);
-
-    if (!datosGuardados) {
-        tareas = [];
-        return;
-    }
-
-    try {
-        tareas = JSON.parse(datosGuardados);
-    } catch {
-        tareas = [];
-    }
+    
 }
 
 /**
- * Pinta la lista de tareas en el DOM, aplicando el filtro activo.
- * @param {string} filtro - "todas" | "pendientes" | "completadas"
+ * @param {string} filtro 
  */
 export function render(filtro = "todas") {
     const lista = document.getElementById("lista-tareas");
@@ -190,7 +164,6 @@ function init() {
     });
 }
 
-// Solo inicializar cuando hay un DOM (no en tests con jsdom)
 if (typeof document !== "undefined" && document.getElementById("lista-tareas")) {
     document.addEventListener("DOMContentLoaded", init);
 }

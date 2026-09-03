@@ -1,34 +1,11 @@
-/**
- * HTTP Inspector CLI
- *
- * Tarea de la Sesión 1: Fundamentos de la Web
- *
- * Esta tarea NO usa la red, ni async/await, ni librerías externas.
- * Solo la biblioteca estándar de Node + tipos básicos de TypeScript.
- *
- * Idea: aplicar lo que aprendiste sobre HTTP (URLs, métodos, códigos
- * de estado y cabeceras) implementando pequeñas funciones puras.
- */
-
-// ---------------------------------------------------------------------------
-// Tipos
-// ---------------------------------------------------------------------------
-
-/** Resultado de analizar una URL. */
 export interface UrlParts {
-  /** Protocolo tal como lo devuelve la WHATWG URL, p. ej. "https:". */
   protocol: string;
-  /** Host (puede incluir puerto), p. ej. "api.ejemplo.com:443". */
   host: string;
-  /** Ruta, p. ej. "/users". */
   pathname: string;
-  /** Query string con el "?" inicial, p. ej. "?id=1&name=Ana". */
   search: string;
-  /** Lista de pares [clave, valor] de los query params. */
   query: Array<[string, string]>;
 }
 
-/** Categoría de un código de estado HTTP. */
 export type StatusCategory =
   | "1xx Informativo"
   | "2xx Éxito"
@@ -37,21 +14,7 @@ export type StatusCategory =
   | "5xx Error del servidor"
   | "Desconocido";
 
-/** Mapa de cabeceras HTTP. */
 export type Headers = Record<string, string>;
-
-// ---------------------------------------------------------------------------
-// Funciones
-// ---------------------------------------------------------------------------
-
-/**
- * Analiza una URL y devuelve sus partes: protocolo, host, pathname,
- * query string y los pares clave-valor de los parámetros.
- *
- * Usa el constructor `new URL(url)` (viene con Node, no requiere
- * ninguna librería externa). Si la URL no es válida, `new URL()`
- * lanza un `TypeError` que se propaga sin manejo adicional.
- */
 export function parseUrl(url: string): UrlParts {
   const u = new URL(url);
   return {
@@ -63,17 +26,6 @@ export function parseUrl(url: string): UrlParts {
   };
 }
 
-/**
- * Clasifica un código de estado HTTP en su categoría.
- *
- * Reglas:
- *   100–199 → "1xx Informativo"
- *   200–299 → "2xx Éxito"
- *   300–399 → "3xx Redirección"
- *   400–499 → "4xx Error del cliente"
- *   500–599 → "5xx Error del servidor"
- *   otro    → "Desconocido"
- */
 export function classifyStatus(code: number): StatusCategory {
   if (code >= 100 && code < 200) return "1xx Informativo";
   if (code >= 200 && code < 300) return "2xx Éxito";
@@ -83,19 +35,6 @@ export function classifyStatus(code: number): StatusCategory {
   return "Desconocido";
 }
 
-/**
- * Parsea un texto con líneas de cabeceras HTTP al formato
- * `Record<string, string>`. El separador entre nombre y valor es ":".
- *
- * Reglas:
- *   - Cada línea no vacía debe tener formato "Nombre: valor".
- *   - Ignora líneas vacías o que no contengan ":".
- *   - No normaliza mayúsculas/minúsculas del nombre.
- *
- * Ejemplo:
- *   parseHeaders("Content-Type: application/json\nAuthorization: Bearer abc")
- *   → { "Content-Type": "application/json", "Authorization": "Bearer abc" }
- */
 export function parseHeaders(text: string): Headers {
   const headers: Headers = {};
   const lines = text.split("\n");
@@ -115,19 +54,6 @@ export function parseHeaders(text: string): Headers {
   return headers;
 }
 
-/**
- * Combina `parseHeaders` y `classifyStatus` en un resumen legible
- * de una petición HTTP, incluyendo la URL, el status y las cabeceras.
- *
- * Ejemplo de salida:
- *   Resumen de la petición
- *   ──────────────────────
- *   URL:     https://api.ejemplo.com/users
- *   Status:  200 (2xx Éxito)
- *   Headers:
- *     • Content-Type: application/json
- *     • Authorization: Bearer abc
- */
 export function summarizeRequest(
   url: string,
   status: number,
@@ -149,10 +75,6 @@ export function summarizeRequest(
     headerLines,
   ].join("\n");
 }
-
-// ---------------------------------------------------------------------------
-// CLI (opcional, pero recomendado para probar manualmente)
-// ---------------------------------------------------------------------------
 
 if (require.main === module) {
   const [, , cmd, ...args] = process.argv;

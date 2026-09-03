@@ -14,9 +14,6 @@ function readFile(relativePath) {
     return readFileSync(fullPath, 'utf-8');
 }
 
-// Carga dinámica de src/app.js como texto para inspección
-// (los tests funcionales usan JSDOM + import dinámico)
-
 describe('Estructura del proyecto', () => {
     it('index.html debe existir', () => {
         assert.ok(existsSync(resolve(root, 'index.html')), 'index.html no encontrado');
@@ -115,11 +112,9 @@ describe('Calidad de JavaScript', () => {
 
     it('src/app.js no debe usar var (debe usar const o let)', () => {
         assert.ok(js, 'src/app.js no se pudo leer');
-        // Buscar declaraciones de variable que NO sean comentarios
         const lineas = js.split('\n');
         for (const linea of lineas) {
             const limpia = linea.replace(/\/\/.*$/, '').trim();
-            // Detectar "var " al inicio de sentencia (no como substring)
             assert.ok(
                 !/^var\s+/.test(limpia) && !/\svar\s+[a-zA-Z_$]/.test(limpia),
                 `Se encontró "var" en: ${linea}`
@@ -183,16 +178,10 @@ describe('No debe haber JavaScript inline', () => {
     });
 });
 
-// ===========================================================
-// Tests funcionales con JSDOM
-// Requieren que el estudiante haya implementado las funciones.
-// ===========================================================
-
 describe('Funciones del modelo (con JSDOM)', () => {
     let agregarTarea, eliminarTarea, toggleTarea, filtrarTareas, guardar, cargar, obtenerTareas;
 
     beforeEach(async () => {
-        // Crear un DOM fresco para que cada test tenga localStorage limpio
         const dom = new JSDOM('<!doctype html><html><body><ul id="lista-tareas"></ul><p id="contador"></p></body></html>', {
             url: 'http://localhost/',
         });
@@ -202,7 +191,6 @@ describe('Funciones del modelo (con JSDOM)', () => {
         globalThis.HTMLElement = dom.window.HTMLElement;
         globalThis.Event = dom.window.Event;
 
-        // Importar app.js ya con el DOM listo
         const url = pathToFileURL(resolve(root, 'src/app.js')).href;
         const mod = await import(`${url}?t=${Date.now()}`);
         agregarTarea = mod.agregarTarea;
@@ -294,11 +282,8 @@ describe('Funciones del modelo (con JSDOM)', () => {
         assert.strictEqual(data.length, 1);
         assert.strictEqual(data[0].texto, 'Persistir esto');
 
-        // Vaciar el array en memoria y volver a cargar
         const tareasAntes = obtenerTareas().slice();
-        // Simulamos que la página se recarga
         const mod = null;
-        // Cargar de nuevo (lee del localStorage)
         cargar();
         const tareasDespues = obtenerTareas();
         assert.strictEqual(tareasDespues.length, tareasAntes.length);
