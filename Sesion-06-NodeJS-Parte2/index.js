@@ -1,12 +1,7 @@
-/**
- * Punto de entrada — Tarea Sesión 6
- * Uso:  npm start   (o)   npm run dev  → node --watch index.js
- */
 import { filtrarLogs, rutaAbsoluta, parsearEnv, registrarProceso, __dirname } from './src/index.js';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
-// Cargar configuración desde un .env de ejemplo (si existe)
 async function cargarConfig() {
     try {
         const texto = await readFile(rutaAbsoluta('config.env'), 'utf-8');

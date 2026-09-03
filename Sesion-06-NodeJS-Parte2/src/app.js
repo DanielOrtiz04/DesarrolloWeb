@@ -20,7 +20,37 @@ export function generarId() {
  * @returns {Promise<number>} 
  */
 export async function filtrarLogs(origen, destino, texto) {
-    throw new Error('Not implemented: filtrarLogs');
+    let contador = 0;
+
+    const origenStream = createReadStream(origen, { encoding: 'utf-8' });
+    const destinoStream = createWriteStream(destino, { encoding: 'utf-8' });
+
+    let sobrante = '';
+
+    const transformador = new Readable.from(
+        (async function* () {
+            for await (const chunk of origenStream) {
+                sobrante += chunk;
+                const lineas = sobrante.split('\n');
+                sobrante = lineas.pop();
+
+                for (const linea of lineas) {
+                    if (linea.includes(texto)) {
+                        contador++;
+                        yield linea + '\n';
+                    }
+                }
+            }
+            if (sobrante && sobrante.includes(texto)) {
+                contador++;
+                yield sobrante + '\n';
+            }
+        })()
+    );
+
+    await pipeline(transformador, destinoStream);
+
+    return contador;
 }
 
 /**
@@ -28,7 +58,24 @@ export async function filtrarLogs(origen, destino, texto) {
  * @returns {Promise<string[]>}
  */
 export async function leerLineas(ruta) {
-    throw new Error('Not implemented: leerLineas');
+    return new Promise((resolve, reject) => {
+        const stream = createReadStream(ruta, { encoding: 'utf-8' });
+        let data = '';
+
+        stream.on('data', (chunk) => {
+            data += chunk;
+        });
+
+        stream.on('end', () => {
+            const lineas = data
+                .split('\n')
+                .map((l) => l.trim())
+                .filter((l) => l.length > 0);
+            resolve(lineas);
+        });
+
+        stream.on('error', reject);
+    });
 }
 
 /**
