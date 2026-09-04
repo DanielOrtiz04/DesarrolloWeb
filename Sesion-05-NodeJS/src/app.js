@@ -134,15 +134,81 @@ export async function agregarMensaje(archivoDatos, texto) {
  * @returns {import('node:http').Server}
  */
 export function crearServidor(config = {}) {
-    throw new Error('Not implemented: crearServidor');
-}
+    const {
+        archivoDatos = 'data/mensajes.json',
+        nombreApp = 'mensajes-api',
+        logger = crearLogger(),
+    } = config;
 
+    const server = http.createServer(async (req, res) => {
+        logger.registrar(`${req.method} ${req.url}`);
+
+        try {
+            if (req.method === 'GET' && req.url === '/') {
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({
+                    mensaje: `Bienvenido a ${nombreApp}`,
+                    hora: new Date().toISOString(),
+                    sistema: infoSistema(),
+                }));
+                return;
+            }
+
+            if (req.method === 'GET' && req.url === '/mensajes') {
+                const mensajes = await leerMensajes(archivoDatos);
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify(mensajes));
+                return;
+            }
+
+            if (req.method === 'POST' && req.url === '/mensajes') {
+                let body = '';
+                req.on('data', (chunk) => (body += chunk));
+                req.on('end', async () => {
+                    try {
+                        const { texto } = JSON.parse(body || '{}');
+                        const nuevo = await agregarMensaje(archivoDatos, texto || '');
+
+                        if (!nuevo) {
+                            res.writeHead(400, { 'Content-Type': 'application/json' });
+                            res.end(JSON.stringify({ error: 'El texto no puede estar vacío' }));
+                            return;
+                        }
+
+                        res.writeHead(201, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify(nuevo));
+                    } catch {
+                        res.writeHead(500, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify({ error: 'Error interno del servidor' }));
+                    }
+                });
+                return;
+            }
+
+            res.writeHead(404, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Ruta no encontrada' }));
+        } catch {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Error interno del servidor' }));
+        }
+    });
+
+    return server;
+}
 /**
  
  * @param {{ puerto?: number, archivoDatos?: string, nombreApp?: string, logger?: ReturnType<typeof crearLogger> }} [config]
  * @returns {import('node:http').Server}
  */
 export function iniciarServidor(config = {}) {
-    throw new Error('Not implemented: iniciarServidor');
+    const { puerto = 3000, logger = crearLogger() } = config;
+
+    const server = crearServidor({ ...config, logger });
+
+    server.listen(puerto, () => {
+        logger.registrar(`Servidor en http://localhost:${puerto}`);
+    });
+
+    return server;
 }
 
