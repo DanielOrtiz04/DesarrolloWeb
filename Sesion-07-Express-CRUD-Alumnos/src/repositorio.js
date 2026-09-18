@@ -1,16 +1,4 @@
 /**
- * repositorio.js — Repositorio en memoria de Alumnos
- * Tarea Sesión 7 · Desarrollo Web · UMG
- *
- * Responsabilidad: guardar y recuperar alumnos. NO conoce Express ni HTTP.
- * Esto es el patrón Repository que ya viste en clase: la capa de datos
- * queda aislada de la capa web.
- *
- * TODO: implementa los 5 métodos marcados. No cambies sus nombres ni firmas.
- */
-
-/**
- * Datos iniciales para que la API arranque con información.
  * @typedef {{ id: string, nombre: string, apellido: string, email: string, edad: number }} Alumno
  * @type {Alumno[]}
  */
@@ -30,47 +18,50 @@ export class RepositorioAlumnos {
     }
 
     /**
-     * Devuelve todos los alumnos.
      * @returns {Alumno[]}
      */
     listar() {
-        throw new Error('TODO: implementar RepositorioAlumnos.listar()');
+        return [...this.alumnos];
     }
 
     /**
-     * Busca un alumno por id.
      * @param {string} id
      * @returns {Alumno | undefined}
      */
     obtener(id) {
-        throw new Error('TODO: implementar RepositorioAlumnos.obtener()');
+        return this.alumnos.find((a) => a.id === id);
     }
 
     /**
-     * Crea un alumno nuevo. El id lo genera el repositorio (`a-1`, `a-2`, ...).
      * @param {Omit<Alumno, 'id'>} datos
      * @returns {Alumno}
      */
     crear(datos) {
-        throw new Error('TODO: implementar RepositorioAlumnos.crear()');
+        const nuevo = { id: `a-${this.siguienteId++}`, ...datos };
+        this.alumnos.push(nuevo);
+        return nuevo;
     }
 
     /**
-     * Actualiza un alumno existente (solo los campos enviados).
      * @param {string} id
-     * @param {Partial<Omit<Alumno, 'id'>>} datos
-     * @returns {Alumno | undefined} el alumno actualizado, o undefined si no existe
+     * @param {Partial<Omit<Alumno, 'id'>>} datose
+     * @returns {Alumno | undefined}
      */
     actualizar(id, datos) {
-        throw new Error('TODO: implementar RepositorioAlumnos.actualizar()');
+        const alumno = this.obtener(id);
+        if (!alumno) return undefined;
+        Object.assign(alumno, datos);
+        return alumno;
     }
 
     /**
-     * Elimina un alumno por id.
      * @param {string} id
-     * @returns {boolean} true si lo eliminó, false si no existía
+     * @returns {boolean} 
      */
-    eliminar(id) {
-        throw new Error('TODO: implementar RepositorioAlumnos.eliminar()');
+   eliminar(id) {
+        const indice = this.alumnos.findIndex((a) => a.id === id);
+        if (indice === -1) return false;
+        this.alumnos.splice(indice, 1);
+        return true;
     }
 }
